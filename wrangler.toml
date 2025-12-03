@@ -1,0 +1,25 @@
+name = "snip-api"
+main = "src/worker/index.ts"
+compatibility_date = "2024-01-01"
+
+# KV Namespace
+[[kv_namespaces]]
+binding = "URL_CACHE"
+id = "URL_CACHE_ID" # Replace with actual ID for production
+preview_id = "URL_CACHE_PREVIEW_ID"
+
+# D1 Database
+[[d1_databases]]
+binding = "DB"
+database_name = "snip-db"
+database_id = "DB_ID" # Replace with actual ID for production
+preview_database_id = "DB_PREVIEW_ID"
+
+# Environment Variables
+[vars]
+SHORT_DOMAIN = "s.lento.dev"
+APP_DOMAIN = "snip.lento.dev"
+
+# CORS
+[dev]
+port = 8787
