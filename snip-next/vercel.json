@@ -1,0 +1,22 @@
+{
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "outputDirectory": ".next",
+  "regions": [
+    "icn1"
+  ],
+  "env": {
+    "NEXT_PUBLIC_SUPABASE_URL": "@supabase-url",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@supabase-anon-key",
+    "SUPABASE_SERVICE_ROLE_KEY": "@supabase-service-role-key",
+    "POLAR_API_KEY": "@polar-api-key",
+    "POLAR_WEBHOOK_SECRET": "@polar-webhook-secret",
+    "RESEND_API_KEY": "@resend-api-key",
+    "NEXT_PUBLIC_POSTHOG_KEY": "@posthog-key",
+    "NEXT_PUBLIC_POSTHOG_HOST": "https://app.posthog.com",
+    "NEXT_PUBLIC_APP_URL": "@app-url",
+    "NEXT_PUBLIC_SHORT_DOMAIN": "@short-domain"
+  }
+}
