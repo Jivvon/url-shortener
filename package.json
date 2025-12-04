@@ -5,9 +5,20 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:worker": "wrangler dev",
+    "dev:redirect": "wrangler dev -c wrangler.redirect.toml",
+    "dev:all": "concurrently \"npm run dev\" \"npm run dev:worker\" \"npm run dev:redirect\"",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "deploy": "wrangler deploy",
+    "deploy:redirect": "wrangler deploy -c wrangler.redirect.toml",
+    "db:migrate:local": "wrangler d1 migrations apply snip-db --local",
+    "db:migrate:prod": "wrangler d1 migrations apply snip-db --remote",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "hono": "^4.10.7",
@@ -20,6 +31,7 @@
     "zustand": "^5.0.9"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20251202.0",
     "@eslint/js": "^9.39.1",
     "@tailwindcss/postcss": "^4.1.17",
     "@testing-library/jest-dom": "^6.9.1",
@@ -29,6 +41,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
     "autoprefixer": "^10.4.22",
+    "concurrently": "^9.2.1",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",

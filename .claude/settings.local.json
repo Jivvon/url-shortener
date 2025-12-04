@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C /Users/lento/Documents/Github/url-shortter log --oneline -10)",
+      "Bash(npm install:*)",
+      "Bash(npm run test:*)",
+      "Bash(npm run typecheck:*)",
+      "Bash(npm run build:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: implement Phase 1 MVP for URL shortener\n\nBackend (Cloudflare Workers + Hono):\n- JWT authentication with Web Crypto API\n- Google OAuth 2.0 integration\n- D1 database helpers and KV caching\n- URL shortening with Base62 short codes\n- Click analytics and statistics service\n- Auth, links, and stats API routes\n- Error handling middleware\n\nFrontend (React + TypeScript + Tailwind):\n- Router with protected routes\n- Auth and Link stores (Zustand)\n- API client with type-safe responses\n- Landing, Pricing, Login pages\n- Dashboard with links management\n- Link creation, editing, and deletion\n- Statistics visualization\n- QR code generation\n- Responsive UI components\n\nInfrastructure:\n- Vitest configuration for worker testing\n- Docker Compose for local development\n- Makefile with dev/test/deploy commands\n- Path aliases (@/, @app/, @worker/)\n- Vite proxy configuration\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

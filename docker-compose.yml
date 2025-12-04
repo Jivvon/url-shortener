@@ -1,14 +1,26 @@
 services:
+  # Combined development environment
   app:
-    image: node:20-alpine
+    image: node:24-alpine
     working_dir: /app
     volumes:
       - .:/app
-      - /app/node_modules
+      - node_modules:/app/node_modules
     ports:
-      - "5173:5173" # Frontend
-      - "8787:8787" # Backend Worker
-      - "8788:8788" # Redirect Worker
-    command: sh -c "npm install && npm run dev"
+      - "5173:5173"   # Frontend (Vite)
+      - "8787:8787"   # API Worker
+      - "8788:8788"   # Redirect Worker
+    command: sh -c "npm install && npm run dev:all"
     environment:
       - NODE_ENV=development
+    env_file:
+      - .dev.vars
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:5173"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  node_modules:
