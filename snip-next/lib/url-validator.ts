@@ -24,7 +24,8 @@ export function validateUrl(url: string): {
     return { valid: true, normalizedUrl }
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { valid: false, error: error.errors[0].message }
+      const message = error.errors?.[0]?.message || 'Invalid URL format'
+      return { valid: false, error: message }
     }
     return { valid: false, error: 'Invalid URL' }
   }
