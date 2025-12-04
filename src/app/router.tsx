@@ -1,130 +1,91 @@
-import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { Layout } from './components/layout/Layout';
+import { Landing } from './pages/Landing';
+import { Login } from './pages/Login';
+import { Callback } from './pages/Callback';
+import { Dashboard } from './pages/dashboard/Dashboard';
+import { Links } from './pages/dashboard/Links';
+import { NewLink } from './pages/dashboard/NewLink';
+import { LinkDetail } from './pages/dashboard/LinkDetail';
+import { Settings } from './pages/dashboard/Settings';
 import { useAuthStore } from './stores/authStore';
 
-// Lazy load pages for code splitting
-import { lazy, Suspense } from 'react';
-
-const Landing = lazy(() => import('./pages/Landing'));
-const Pricing = lazy(() => import('./pages/Pricing'));
-const Login = lazy(() => import('./pages/Login'));
-const Callback = lazy(() => import('./pages/Callback'));
-const DashboardLayout = lazy(() => import('./pages/dashboard/Layout'));
-const Dashboard = lazy(() => import('./pages/dashboard/Dashboard'));
-const Links = lazy(() => import('./pages/dashboard/Links'));
-const NewLink = lazy(() => import('./pages/dashboard/NewLink'));
-const LinkDetail = lazy(() => import('./pages/dashboard/LinkDetail'));
-const Settings = lazy(() => import('./pages/dashboard/Settings'));
-
-// Loading component
-function PageLoader() {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-    </div>
-  );
-}
-
-// Protected route wrapper
-function ProtectedRoute() {
-  const { isAuthenticated, isLoading } = useAuthStore();
+// Protected Route Wrapper
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user, isLoading } = useAuthStore();
 
   if (isLoading) {
-    return <PageLoader />;
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
 
-  if (!isAuthenticated) {
+  if (!user) {
     return <Navigate to="/login" replace />;
   }
 
-  return (
-    <Suspense fallback={<PageLoader />}>
-      <Outlet />
-    </Suspense>
-  );
-}
-
-// Public route wrapper (redirect if authenticated)
-function PublicRoute() {
-  const { isAuthenticated, isLoading } = useAuthStore();
-
-  if (isLoading) {
-    return <PageLoader />;
-  }
-
-  if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
-  }
-
-  return (
-    <Suspense fallback={<PageLoader />}>
-      <Outlet />
-    </Suspense>
-  );
-}
+  return <>{children}</>;
+};
 
 export const router = createBrowserRouter([
-  // Public routes
   {
-    element: <PublicRoute />,
+    path: '/',
+    element: <Layout />,
     children: [
       {
-        path: '/',
+        index: true,
         element: <Landing />,
       },
       {
-        path: '/pricing',
-        element: <Pricing />,
-      },
-      {
-        path: '/login',
+        path: 'login',
         element: <Login />,
       },
-    ],
-  },
-  // Auth callback (no protection needed)
-  {
-    path: '/callback',
-    element: (
-      <Suspense fallback={<PageLoader />}>
-        <Callback />
-      </Suspense>
-    ),
-  },
-  // Protected routes
-  {
-    element: <ProtectedRoute />,
-    children: [
       {
-        path: '/dashboard',
-        element: <DashboardLayout />,
-        children: [
-          {
-            index: true,
-            element: <Dashboard />,
-          },
-          {
-            path: 'links',
-            element: <Links />,
-          },
-          {
-            path: 'links/new',
-            element: <NewLink />,
-          },
-          {
-            path: 'links/:id',
-            element: <LinkDetail />,
-          },
-          {
-            path: 'settings',
-            element: <Settings />,
-          },
-        ],
+        path: 'callback',
+        element: <Callback />,
+      },
+      {
+        path: 'pricing',
+        element: <div>Pricing Page (Coming Soon)</div>,
+      },
+      {
+        path: 'dashboard',
+        element: (
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'dashboard/links',
+        element: (
+          <ProtectedRoute>
+            <Links />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'dashboard/links/:id',
+        element: (
+          <ProtectedRoute>
+            <LinkDetail />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'dashboard/new',
+        element: (
+          <ProtectedRoute>
+            <NewLink />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'dashboard/settings',
+        element: (
+          <ProtectedRoute>
+            <Settings />
+          </ProtectedRoute>
+        ),
       },
     ],
-  },
-  // Catch all - redirect to home
-  {
-    path: '*',
-    element: <Navigate to="/" replace />,
   },
 ]);

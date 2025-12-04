@@ -35,6 +35,7 @@ export interface Link {
   id: string;
   user_id: string;
   short_code: string;
+  short_url?: string; // Added for frontend convenience
   original_url: string;
   title: string | null;
   is_active: boolean;

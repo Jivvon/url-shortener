@@ -208,9 +208,31 @@ export async function updateLinkById(
     throw notFoundError('Link');
   }
 
-  // If link is deactivated, remove from cache
+  // Handle KV updates
   if (updates.is_active === false) {
+    // Deactivated: remove from cache
     await deleteCachedUrl(kv, link.short_code);
+  } else if (updates.is_active === true || updates.expires_at !== undefined) {
+    // Reactivated or expiration changed: update/restore cache
+    const isActive = updatedLink.is_active;
+    const isExpired = updatedLink.expires_at && new Date(updatedLink.expires_at) < new Date();
+
+    if (isActive && !isExpired) {
+      const cacheOptions = updatedLink.expires_at
+        ? { expirationTtl: Math.floor((new Date(updatedLink.expires_at).getTime() - Date.now()) / 1000) }
+        : undefined;
+
+      // Ensure TTL is positive
+      if (!cacheOptions || (cacheOptions.expirationTtl && cacheOptions.expirationTtl > 0)) {
+        await cacheUrl(kv, updatedLink.short_code, updatedLink.original_url, {
+          ...cacheOptions,
+          metadata: { linkId: updatedLink.id, userId: updatedLink.user_id },
+        });
+      }
+    } else {
+      // If it's active but expired (or deactivated), ensure it's removed
+      await deleteCachedUrl(kv, updatedLink.short_code);
+    }
   }
 
   return updatedLink;

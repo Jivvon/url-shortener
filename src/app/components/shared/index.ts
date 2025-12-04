@@ -1,1 +1,1 @@
-export { default as QRCodeGenerator } from './QRCodeGenerator';
+export { QRCodeGenerator } from './QRCodeGenerator';

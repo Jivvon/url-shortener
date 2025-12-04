@@ -1,187 +1,118 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
 import { useLinkStore } from '../../stores/linkStore';
-import { Card, CardContent, CardTitle, Button } from '../../components/ui';
+import { Link } from 'react-router-dom';
 
-export default function Dashboard() {
-  const { user, plan } = useAuthStore();
-  const { links, fetchLinks, isLoading } = useLinkStore();
+export function Dashboard() {
+  const { user } = useAuthStore();
+  const { links, total, fetchLinks, isLoading } = useLinkStore();
 
   useEffect(() => {
-    fetchLinks({ limit: 5 });
+    fetchLinks();
   }, [fetchLinks]);
 
-  const recentLinks = links.slice(0, 5);
-  const totalClicks = links.reduce((sum, link) => sum + link.total_clicks, 0);
-
   return (
-    <div>
-      {/* Welcome Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">
-          Welcome back, {user?.name?.split(' ')[0]}!
-        </h1>
-        <p className="text-gray-600 mt-1">
-          Here's what's happening with your links
-        </p>
-      </div>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <Card>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500">Total Links</p>
-                <p className="text-3xl font-bold text-gray-900">{links.length}</p>
-              </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <svg
-                  className="w-6 h-6 text-blue-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
-                  />
-                </svg>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500">Total Clicks</p>
-                <p className="text-3xl font-bold text-gray-900">{totalClicks}</p>
-              </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <svg
-                  className="w-6 h-6 text-green-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"
-                  />
-                </svg>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500">Monthly Limit</p>
-                <p className="text-3xl font-bold text-gray-900">
-                  {user?.url_count_this_month || 0}/{plan?.url_limit || 50}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <svg
-                  className="w-6 h-6 text-purple-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                  />
-                </svg>
-              </div>
-            </div>
-            {/* Progress bar */}
-            <div className="mt-4">
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div
-                  className="bg-purple-600 h-2 rounded-full"
-                  style={{
-                    width: `${Math.min(
-                      ((user?.url_count_this_month || 0) / (plan?.url_limit || 50)) * 100,
-                      100
-                    )}%`,
-                  }}
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Recent Links */}
-      <Card padding="none">
-        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-          <CardTitle>Recent Links</CardTitle>
-          <Link to="/dashboard/links">
-            <Button variant="ghost" size="sm">
-              View All
-            </Button>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+            <p className="text-gray-600 mt-1">Welcome back, {user?.name}</p>
+          </div>
+          <Link
+            to="/dashboard/new"
+            className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 transition-colors flex items-center gap-2"
+          >
+            <span>+</span> Create New Link
           </Link>
         </div>
-        <div className="divide-y divide-gray-200">
+
+        {/* Stats Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <h3 className="text-gray-500 text-sm font-medium uppercase tracking-wider">Total Links</h3>
+            <p className="text-3xl font-bold text-gray-900 mt-2">{total}</p>
+          </div>
+          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <h3 className="text-gray-500 text-sm font-medium uppercase tracking-wider">Total Clicks</h3>
+            <p className="text-3xl font-bold text-gray-900 mt-2">
+              {links.reduce((acc, link) => acc + link.total_clicks, 0)}
+            </p>
+          </div>
+          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <h3 className="text-gray-500 text-sm font-medium uppercase tracking-wider">Plan Usage</h3>
+            <p className="text-3xl font-bold text-gray-900 mt-2">
+              {user?.url_count_this_month} <span className="text-lg text-gray-400 font-normal">/ {user?.plan_id === 'free' ? 50 : '∞'}</span>
+            </p>
+          </div>
+        </div>
+
+        {/* Recent Links */}
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <h2 className="text-lg font-semibold text-gray-900">Recent Links</h2>
+            <Link to="/dashboard/links" className="text-indigo-600 hover:text-indigo-700 text-sm font-medium">
+              View All
+            </Link>
+          </div>
+
           {isLoading ? (
-            <div className="p-6 text-center text-gray-500">Loading...</div>
-          ) : recentLinks.length === 0 ? (
-            <div className="p-6 text-center">
-              <p className="text-gray-500 mb-4">No links yet</p>
-              <Link to="/dashboard/links/new">
-                <Button>Create Your First Link</Button>
+            <div className="p-8 text-center text-gray-500">Loading...</div>
+          ) : links.length === 0 ? (
+            <div className="p-12 text-center">
+              <p className="text-gray-500 mb-4">You haven't created any links yet.</p>
+              <Link
+                to="/dashboard/new"
+                className="text-indigo-600 hover:text-indigo-700 font-medium"
+              >
+                Create your first link
               </Link>
             </div>
           ) : (
-            recentLinks.map((link) => (
-              <Link
-                key={link.id}
-                to={`/dashboard/links/${link.id}`}
-                className="block px-6 py-4 hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-blue-600 truncate">
-                      {link.short_url}
-                    </p>
-                    <p className="text-sm text-gray-500 truncate mt-1">
-                      {link.title || link.original_url}
-                    </p>
+            <ul className="divide-y divide-gray-200">
+              {links.slice(0, 5).map((link) => (
+                <li key={link.id} className="px-6 py-4 hover:bg-gray-50 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-3">
+                        <h3 className="text-sm font-medium text-indigo-600 truncate">
+                          {link.short_code}
+                        </h3>
+                        <span className="text-gray-300">|</span>
+                        <p className="text-sm text-gray-900 truncate max-w-md">
+                          {link.original_url}
+                        </p>
+                      </div>
+                      <div className="mt-1 flex items-center gap-4 text-xs text-gray-500">
+                        <span>{new Date(link.created_at).toLocaleDateString()}</span>
+                        <span>•</span>
+                        <span>{link.total_clicks} clicks</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(`https://s.lento.dev/${link.short_code}`);
+                        }}
+                        className="text-gray-400 hover:text-gray-600"
+                        title="Copy"
+                      >
+                        Copy
+                      </button>
+                      <Link
+                        to={`/dashboard/links/${link.id}`}
+                        className="text-gray-400 hover:text-gray-600"
+                      >
+                        Details
+                      </Link>
+                    </div>
                   </div>
-                  <div className="ml-4 flex items-center text-sm text-gray-500">
-                    <svg
-                      className="w-4 h-4 mr-1"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"
-                      />
-                    </svg>
-                    {link.total_clicks}
-                  </div>
-                </div>
-              </Link>
-            ))
+                </li>
+              ))}
+            </ul>
           )}
         </div>
-      </Card>
+      </div>
     </div>
   );
 }
