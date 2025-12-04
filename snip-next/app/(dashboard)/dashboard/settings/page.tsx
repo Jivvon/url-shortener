@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -61,7 +62,9 @@ export default async function SettingsPage() {
               You are currently on the <span className="font-bold capitalize">{profile?.plans?.name}</span> plan.
             </p>
           </div>
-          <Button variant="outline">Upgrade Plan</Button>
+          <Link href="/pricing">
+            <Button variant="outline">Upgrade Plan</Button>
+          </Link>
         </div>
 
         <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
