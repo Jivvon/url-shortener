@@ -1,0 +1,76 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Snip",
+  "logo": {
+    "dark": "/logo/dark.svg",
+    "light": "/logo/light.svg"
+  },
+  "favicon": "/favicon.png",
+  "colors": {
+    "primary": "#4F46E5",
+    "light": "#818CF8",
+    "dark": "#312E81",
+    "anchors": "#4F46E5"
+  },
+  "topbarLinks": [
+    {
+      "name": "Dashboard",
+      "url": "https://snip.com/dashboard"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Get Started",
+    "url": "https://snip.com/login"
+  },
+  "primaryTab": {
+    "name": "Documentation"
+  },
+  "tabs": [
+    {
+      "name": "API Reference",
+      "url": "api-reference"
+    }
+  ],
+  "anchors": [
+    {
+      "name": "Community",
+      "icon": "discord",
+      "url": "https://discord.gg/snip"
+    },
+    {
+      "name": "GitHub",
+      "icon": "github",
+      "url": "https://github.com/snip/snip"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Get Started",
+      "pages": [
+        "introduction",
+        "quickstart"
+      ]
+    },
+    {
+      "group": "Essentials",
+      "pages": [
+        "essentials/creating-links",
+        "essentials/analytics",
+        "essentials/custom-domains"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "pages": [
+        "api-reference/introduction",
+        "api-reference/authentication",
+        "api-reference/endpoints/links"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "x": "https://x.com/snip",
+    "github": "https://github.com/snip/snip",
+    "linkedin": "https://linkedin.com/company/snip"
+  }
+}

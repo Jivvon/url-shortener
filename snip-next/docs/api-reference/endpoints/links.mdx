@@ -1,0 +1,44 @@
+---
+title: 'Get Links'
+api: 'GET https://api.snip.com/v1/links'
+description: 'Retrieve a list of your short links'
+---
+
+## Query Parameters
+
+<ParamField query="page" type="integer" default="1">
+  The page number to retrieve.
+</ParamField>
+
+<ParamField query="limit" type="integer" default="10">
+  The number of items to return per page. Max 100.
+</ParamField>
+
+<ParamField query="search" type="string">
+  Search term to filter links by title, original URL, or short code.
+</ParamField>
+
+## Response
+
+<ResponseField name="links" type="array">
+  List of link objects.
+
+  <Expandable title="Link Object">
+    <ResponseField name="id" type="string">
+      The unique identifier for the link.
+    </ResponseField>
+    <ResponseField name="short_code" type="string">
+      The short code for the link.
+    </ResponseField>
+    <ResponseField name="original_url" type="string">
+      The destination URL.
+    </ResponseField>
+    <ResponseField name="total_clicks" type="integer">
+      The total number of clicks the link has received.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="pagination" type="object">
+  Pagination metadata.
+</ResponseField>

@@ -1,0 +1,37 @@
+---
+title: 'Introduction'
+description: 'Welcome to the Snip API'
+---
+
+## Base URL
+
+The Snip API is built on REST principles. We enforce HTTPS in every request to improve data security, integrity, and privacy. The API does not support HTTP.
+
+```bash
+https://api.snip.com/v1
+```
+
+## Authentication
+
+The Snip API uses API keys to authenticate requests. You can view and manage your API keys in the [Dashboard](https://snip.com/dashboard/settings).
+
+Authentication to the API is performed via HTTP Basic Auth. Provide your API key as the basic auth username value. You do not need to provide a password.
+
+```bash
+Authorization: Bearer <YOUR_API_KEY>
+```
+
+## Response Codes
+
+Snip uses standard HTTP response codes to indicate the success or failure of an API request.
+
+| Code | Description |
+| :--- | :--- |
+| `200` | **OK** - The request was successful. |
+| `201` | **Created** - The resource was successfully created. |
+| `400` | **Bad Request** - The request was invalid or cannot be served. |
+| `401` | **Unauthorized** - Missing or invalid authentication. |
+| `403` | **Forbidden** - You do not have permission to access the resource. |
+| `404` | **Not Found** - The requested resource could not be found. |
+| `429` | **Too Many Requests** - You have exceeded the rate limit. |
+| `500` | **Internal Server Error** - Something went wrong on our end. |
