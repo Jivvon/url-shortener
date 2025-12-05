@@ -4,11 +4,13 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function Home() {
   const searchParams = useSearchParams()
   const error = searchParams.get('error')
   const code = searchParams.get('code')
+  const { user, loading } = useAuth()
 
   return (
     <div className="min-h-screen">
@@ -80,22 +82,44 @@ export default function Home() {
               </Card>
             )}
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link href="/login">
-                <Button size="lg" className="group px-8 py-6 text-lg">
-                  Start for Free
-                  <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
-                </Button>
-              </Link>
-              <Link href="#features">
-                <Button size="lg" variant="outline" className="px-8 py-6 text-lg">
-                  Learn More
-                </Button>
-              </Link>
-            </div>
+            {/* CTA Buttons - Different for logged in vs logged out */}
+            {!loading && (
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                {user ? (
+                  <>
+                    <Link href="/dashboard">
+                      <Button size="lg" className="group px-8 py-6 text-lg">
+                        Go to Dashboard
+                        <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                      </Button>
+                    </Link>
+                    <Link href="/dashboard/settings">
+                      <Button size="lg" variant="outline" className="px-8 py-6 text-lg">
+                        Settings
+                      </Button>
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/login">
+                      <Button size="lg" className="group px-8 py-6 text-lg">
+                        Start for Free
+                        <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                      </Button>
+                    </Link>
+                    <Link href="#features">
+                      <Button size="lg" variant="outline" className="px-8 py-6 text-lg">
+                        Learn More
+                      </Button>
+                    </Link>
+                  </>
+                )}
+              </div>
+            )}
 
             {/* Stats */}
             <div className="mt-16 grid grid-cols-3 gap-8 max-w-3xl mx-auto">
