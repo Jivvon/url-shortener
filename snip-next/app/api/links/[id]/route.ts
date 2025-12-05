@@ -2,12 +2,17 @@ import { createClient } from '@/lib/supabase/server'
 import { updateLinkSchema } from '@/lib/validations'
 import { NextResponse } from 'next/server'
 
+type RouteContext = {
+  params: Promise<{ id: string }>
+}
+
 /**
  * GET /api/links/[id]
  * Get a specific link by ID
  */
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, context: RouteContext) {
   try {
+    const { id } = await context.params
     const supabase = await createClient()
 
     // Check authentication
@@ -22,7 +27,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
     const { data: link, error } = await supabase
       .from('links')
       .select('*')
-      .eq('id', params.id)
+      .eq('id', id)
       .eq('user_id', user.id)
       .single()
 
@@ -49,8 +54,9 @@ export async function GET(request: Request, { params }: { params: { id: string }
  * PATCH /api/links/[id]
  * Update a link
  */
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(request: Request, context: RouteContext) {
   try {
+    const { id } = await context.params
     const supabase = await createClient()
 
     // Check authentication
@@ -66,7 +72,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     const { data: existingLink } = await supabase
       .from('links')
       .select('*')
-      .eq('id', params.id)
+      .eq('id', id)
       .eq('user_id', user.id)
       .single()
 
@@ -82,7 +88,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     const { data: link, error } = await supabase
       .from('links')
       .update(input)
-      .eq('id', params.id)
+      .eq('id', id)
       .eq('user_id', user.id)
       .select()
       .single()
@@ -111,8 +117,9 @@ export async function PATCH(request: Request, { params }: { params: { id: string
  * DELETE /api/links/[id]
  * Delete a link
  */
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, context: RouteContext) {
   try {
+    const { id } = await context.params
     const supabase = await createClient()
 
     // Check authentication
@@ -125,7 +132,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     }
 
     // Delete link (RLS will ensure it belongs to the user)
-    const { error } = await supabase.from('links').delete().eq('id', params.id).eq('user_id', user.id)
+    const { error } = await supabase.from('links').delete().eq('id', id).eq('user_id', user.id)
 
     if (error) {
       console.error('Error deleting link:', error)

@@ -14,13 +14,16 @@ export const metadata: Metadata = {
   description: "Create short, memorable links in seconds. Track clicks, analyze traffic, and grow your audience with powerful analytics.",
 };
 
+// Force dynamic rendering for entire app
+export const dynamic = 'force-dynamic';
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased`}>
         <AuthProvider>
           {children}

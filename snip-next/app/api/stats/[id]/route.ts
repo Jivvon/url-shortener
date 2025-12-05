@@ -1,12 +1,17 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
+type RouteContext = {
+  params: Promise<{ id: string }>
+}
+
 /**
  * GET /api/stats/[id]
  * Get statistics for a specific link
  */
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, context: RouteContext) {
   try {
+    const { id } = await context.params
     const supabase = await createClient()
 
     // Check authentication
@@ -22,7 +27,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
     const { data: link } = await supabase
       .from('links')
       .select('*')
-      .eq('id', params.id)
+      .eq('id', id)
       .eq('user_id', user.id)
       .single()
 
@@ -66,7 +71,8 @@ export async function GET(request: Request, { params }: { params: { id: string }
     const uniqueVisitors = summary ? new Set(summary.map((c) => c.ip_hash)).size : 0
 
     // Get daily breakdown
-    const { data: dailyData } = await supabase.rpc('get_daily_clicks', {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: dailyData } = await (supabase.rpc as any)('get_daily_clicks', {
       p_link_id: link.id,
       p_start_date: startDate.toISOString(),
     })

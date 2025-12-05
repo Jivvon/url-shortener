@@ -6,11 +6,15 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { QRCodeSVG } from 'qrcode.react'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 export default async function LinkDetailPage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
+  const { id } = await params
   const supabase = await createClient()
 
   const {
@@ -25,7 +29,7 @@ export default async function LinkDetailPage({
   const { data: link } = await supabase
     .from('links')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .eq('user_id', user.id)
     .single()
 
@@ -37,7 +41,8 @@ export default async function LinkDetailPage({
   const startDate = new Date()
   startDate.setDate(startDate.getDate() - 30)
 
-  const { data: dailyStats } = await supabase.rpc('get_daily_clicks', {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: dailyStats } = await (supabase.rpc as any)('get_daily_clicks', {
     p_link_id: link.id,
     p_start_date: startDate.toISOString(),
   })
@@ -49,6 +54,7 @@ export default async function LinkDetailPage({
     .eq('link_id', link.id)
     .gte('created_at', startDate.toISOString())
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const devices = deviceStats?.reduce((acc: any, curr) => {
     const device = curr.device || 'unknown'
     acc[device] = (acc[device] || 0) + 1
@@ -137,6 +143,7 @@ export default async function LinkDetailPage({
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4">Devices</h3>
             <div className="space-y-4">
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               {Object.entries(devices || {}).map(([device, count]: [string, any]) => (
                 <div key={device} className="flex items-center justify-between">
                   <span className="capitalize text-gray-600">{device}</span>

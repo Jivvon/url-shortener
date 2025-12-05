@@ -2,11 +2,15 @@ import { createClient } from '@/lib/supabase/server'
 import { LinkList } from '@/components/dashboard/link-list'
 import { redirect } from 'next/navigation'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 export default async function LinksPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
+  const params = await searchParams
   const supabase = await createClient()
 
   const {
@@ -18,9 +22,9 @@ export default async function LinksPage({
   }
 
   // Parse params
-  const page = Number(searchParams.page) || 1
-  const limit = Number(searchParams.limit) || 10
-  const search = searchParams.search as string
+  const page = Number(params.page) || 1
+  const limit = Number(params.limit) || 10
+  const search = params.search as string
   const from = (page - 1) * limit
   const to = from + limit - 1
 
